@@ -40,6 +40,10 @@ func SendMessageRabbitMQHandler(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(BadRequestError{Error: "message is required"})
 	}
 
-	repository.SendMessageRabbitMQ(payload.Message)
+	err := repository.SendMessageRabbitMQ(payload.Message)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(BadRequestError{Error: "failed to send message"})
+	}
+
 	return ctx.Status(fiber.StatusOK).JSON(Response{Message: "message sent"})
 }

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Running pre-commit hook"
+
+echo "Running go mod tidy"
+go mod tidy
+
+echo "Running go fmt"
+go fmt ./...
+
+echo "Running go vet"
+go vet ./...

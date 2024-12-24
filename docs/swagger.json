@@ -1,0 +1,63 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/send": {
+            "post": {
+                "description": "Envia uma mensagem para o RabbitMQ",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "send"
+                ],
+                "summary": "Envia uma mensagem para o RabbitMQ",
+                "parameters": [
+                    {
+                        "description": "Payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pkg_handlers.Payload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pkg_handlers.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "pkg_handlers.Payload": {
+            "description": "Payload da requisição",
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "pkg_handlers.Response": {
+            "description": "Resposta da requisição",
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "message sent"
+                }
+            }
+        }
+    }
+}

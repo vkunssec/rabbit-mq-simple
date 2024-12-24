@@ -16,3 +16,6 @@ run-consumer:
 
 run-sender:
 	./tmp/sender
+
+swagger:
+	swag init -g cmd/sender/main.go --parseDependency --parseInternal

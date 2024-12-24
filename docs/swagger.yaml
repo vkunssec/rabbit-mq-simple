@@ -1,0 +1,40 @@
+definitions:
+  pkg_handlers.Payload:
+    description: Payload da requisição
+    properties:
+      message:
+        type: string
+    type: object
+  pkg_handlers.Response:
+    description: Resposta da requisição
+    properties:
+      message:
+        example: message sent
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /send:
+    post:
+      consumes:
+      - application/json
+      description: Envia uma mensagem para o RabbitMQ
+      parameters:
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/pkg_handlers.Payload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pkg_handlers.Response'
+      summary: Envia uma mensagem para o RabbitMQ
+      tags:
+      - send
+swagger: "2.0"

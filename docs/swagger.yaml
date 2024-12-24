@@ -1,8 +1,17 @@
 definitions:
+  pkg_handlers.BadRequestError:
+    description: Erro de requisição
+    properties:
+      error:
+        example: message is required
+        type: string
+    type: object
   pkg_handlers.Payload:
     description: Payload da requisição
     properties:
       message:
+        type: string
+      routing_key:
         type: string
     type: object
   pkg_handlers.Response:
@@ -34,6 +43,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/pkg_handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg_handlers.BadRequestError'
       summary: Envia uma mensagem para o RabbitMQ
       tags:
       - send

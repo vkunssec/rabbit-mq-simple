@@ -45,17 +45,36 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/pkg_handlers.Response"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/pkg_handlers.BadRequestError"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "pkg_handlers.BadRequestError": {
+            "description": "Erro de requisição",
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "message is required"
+                }
+            }
+        },
         "pkg_handlers.Payload": {
             "description": "Payload da requisição",
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                },
+                "routing_key": {
                     "type": "string"
                 }
             }

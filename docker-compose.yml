@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+    sender:
+        build:
+            context: .
+            dockerfile: Dockerfile.sender
+        environment:
+            AMQP_SERVER_URL: amqp://guest:guest@rabbitmq:5672/%2f
+            QUEUE_NAME: QueueService1
+            EXCHANGE_NAME: ExchangeService1
+        ports:
+            - "3000:3000"
+        networks:
+            - dev-network
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+        restart: on-failure
+
+    consumer:
+        build:
+            context: .
+            dockerfile: Dockerfile.consumer
+        environment:
+            AMQP_SERVER_URL: amqp://guest:guest@rabbitmq:5672/%2f
+            QUEUE_NAME: QueueService1
+            EXCHANGE_NAME: ExchangeService1
+        networks:
+            - dev-network
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+        restart: on-failure
+
+    rabbitmq:
+        container_name: rabbitmq
+        image: rabbitmq:3.11-management
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+            - RABBITMQ_DEFAULT_VHOST=/
+        healthcheck:
+            test: ["CMD", "rabbitmqctl", "status"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        restart: always
+        networks:
+            - dev-network
+
+volumes:
+    rabbitmq_data:
+    rabbitmq_logs:
+
+networks:
+    dev-network:
+        driver: bridge

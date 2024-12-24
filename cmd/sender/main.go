@@ -64,11 +64,11 @@ func main() {
 
 		// Attempt to publish a message to the queue.
 		if err := channelRabbitMQ.Publish(
-			"",              // exchange
-			"QueueService1", // queue name
-			false,           // mandatory
-			false,           // immediate
-			message,         // message to publish
+			"ExchangeService1", // exchange
+			"QueueService1",    // queue name
+			false,              // mandatory
+			false,              // immediate
+			message,            // message to publish
 		); err != nil {
 			return err
 		}

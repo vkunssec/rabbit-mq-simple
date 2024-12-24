@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 sender:
 	go run cmd/sender/main.go
 
@@ -8,6 +10,7 @@ env:
 	cp .env.example .env
 
 build:
+	make swagger
 	go build -ldflags="-s -w" -o tmp/sender cmd/sender/main.go
 	go build -ldflags="-s -w" -o tmp/consumer cmd/consumer/main.go
 
@@ -19,3 +22,9 @@ run-sender:
 
 swagger:
 	swag init -g cmd/sender/main.go --parseDependency --parseInternal
+
+dev:
+	make swagger
+	air server
+
+all: swagger dev

@@ -1,4 +1,5 @@
-.DEFAULT_GOAL := all
+MAKEFLAGS += -j2
+.DEFAULT_GOAL := run
 
 sender:
 	go run cmd/sender/main.go
@@ -14,10 +15,11 @@ build:
 	go build -ldflags="-s -w" -o tmp/sender cmd/sender/main.go
 	go build -ldflags="-s -w" -o tmp/consumer cmd/consumer/main.go
 
+target: run-consumer run-sender
+
 run:
 	make build
-	make run-consumer
-	make run-sender
+	make target
 
 run-consumer:
 	./tmp/consumer

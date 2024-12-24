@@ -14,6 +14,11 @@ build:
 	go build -ldflags="-s -w" -o tmp/sender cmd/sender/main.go
 	go build -ldflags="-s -w" -o tmp/consumer cmd/consumer/main.go
 
+run:
+	make build
+	make run-consumer
+	make run-sender
+
 run-consumer:
 	./tmp/consumer
 

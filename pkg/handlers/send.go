@@ -19,6 +19,12 @@ type Response struct {
 	Message string `json:"message" example:"message sent"`
 }
 
+// BadRequestError é a estrutura que representa o erro de requisição
+// @Description Erro de requisição
+type BadRequestError struct {
+	Error string `json:"error" example:"message is required"`
+}
+
 // @Summary Envia uma mensagem para o RabbitMQ
 // @Description Envia uma mensagem para o RabbitMQ
 // @Tags send
@@ -26,11 +32,12 @@ type Response struct {
 // @Produce json
 // @Param payload body Payload true "Payload"
 // @Success 200 {object} Response
+// @Failure 400 {object} BadRequestError
 // @Router /send [post]
 func SendMessageRabbitMQHandler(ctx *fiber.Ctx) error {
 	payload := new(Payload)
 	if err := ctx.BodyParser(payload); err != nil || payload.Message == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "message is required"})
+		return ctx.Status(fiber.StatusBadRequest).JSON(BadRequestError{Error: "message is required"})
 	}
 
 	repository.SendMessageRabbitMQ(payload.Message)

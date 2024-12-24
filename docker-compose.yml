@@ -18,13 +18,28 @@ services:
                 condition: service_healthy
         restart: on-failure
 
-    consumer:
+    consumer-1:
         build:
             context: .
-            dockerfile: Dockerfile.consumer
+            dockerfile: Dockerfile.consumer-1
         environment:
             AMQP_SERVER_URL: amqp://guest:guest@rabbitmq:5672/%2f
             QUEUE_NAME: QueueService1
+            EXCHANGE_NAME: ExchangeService1
+        networks:
+            - dev-network
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+        restart: on-failure
+
+    consumer-2:
+        build:
+            context: .
+            dockerfile: Dockerfile.consumer-2
+        environment:
+            AMQP_SERVER_URL: amqp://guest:guest@rabbitmq:5672/%2f
+            QUEUE_NAME: QueueService2
             EXCHANGE_NAME: ExchangeService1
         networks:
             - dev-network

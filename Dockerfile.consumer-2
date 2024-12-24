@@ -2,11 +2,12 @@ FROM golang:alpine AS builder
 WORKDIR /app
 COPY . /app/
 RUN GOPROXY="https://goproxy.io,direct" go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o application ./cmd/consumer/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o application ./cmd/consumer-2/main.go
 
 FROM alpine:latest AS prd
 RUN apk add ca-certificates dumb-init
 WORKDIR /app
+COPY --from=builder /app/.env .
 COPY --from=builder /app/application .
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["./application"]

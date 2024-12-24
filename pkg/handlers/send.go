@@ -10,7 +10,8 @@ import (
 // Payload é a estrutura que representa o payload da requisição
 // @Description Payload da requisição
 type Payload struct {
-	Message string `json:"message"`
+	Message    string `json:"message"`
+	RoutingKey string `json:"routing_key"`
 }
 
 // Response é a estrutura que representa a resposta da requisição
@@ -40,7 +41,11 @@ func SendMessageRabbitMQHandler(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(BadRequestError{Error: "message is required"})
 	}
 
-	err := repository.SendMessageRabbitMQ(payload.Message)
+	if payload.RoutingKey == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(BadRequestError{Error: "routing key is required"})
+	}
+
+	err := repository.SendMessageRabbitMQ(payload.Message, payload.RoutingKey)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(BadRequestError{Error: "failed to send message"})
 	}

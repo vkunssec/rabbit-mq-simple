@@ -9,6 +9,7 @@ Este é um projeto de exemplo que demonstra a implementação de um sistema de m
 - [Docker](https://www.docker.com/) - Containerização
 - [Fiber](https://gofiber.io/) - Framework Web
 - [Swagger](https://swagger.io/) - Documentação da API
+- [Scalar](https://github.com/scalar/scalar) - Interface moderna para documentação da API
 - [Air](https://github.com/cosmtrek/air) - Live Reload para desenvolvimento
 - [Husky](https://typicode.github.io/husky/) - Git Hooks
 
@@ -160,3 +161,31 @@ O projeto inclui quatro containers principais:
 4. **rabbitmq**: Servidor RabbitMQ
    - Portas: 5672 (AMQP), 15672 (Management UI)
    - Imagem: rabbitmq:3.11-management
+
+## 📚 Documentação da API
+
+A documentação da API está disponível em dois formatos:
+
+### Swagger UI
+- URL: `http://localhost:3000/swagger`
+- Fornece uma interface moderna e interativa para testar os endpoints
+- Documentação completa dos schemas e responses
+- Modo escuro habilitado por padrão
+
+### Endpoints Disponíveis
+
+#### POST /send
+Envia mensagens para o RabbitMQ
+
+**Payload:**
+```json
+{
+  "message": "string",
+  "routing_key": "string"
+}
+```
+
+**Responses:**
+- 200: Mensagem enviada com sucesso
+- 400: Erro de validação do payload
+- 500: Erro interno do servidor

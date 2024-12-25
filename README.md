@@ -23,7 +23,7 @@ Este é um projeto de exemplo que demonstra a implementação de um sistema de m
 1. Clone o repositório:
 
 ```
-git clone https://github.com/seu-usuario/rabbit-mq-simple.git
+git clone https://github.com/vkunssec/rabbit-mq-simple.git
 cd rabbit-mq-simple
 ```
 

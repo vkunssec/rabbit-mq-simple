@@ -9,7 +9,14 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -17,7 +24,7 @@ const docTemplate = `{
     "paths": {
         "/send": {
             "post": {
-                "description": "Envia uma mensagem para o RabbitMQ",
+                "description": "Endpoint para enviar mensagens ao RabbitMQ. Requer uma mensagem e uma routing key válida. A mensagem será publicada no exchange configurado usando a routing key especificada.",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,7 +32,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "send"
+                    "Send Message RabbitMQ"
                 ],
                 "summary": "Envia uma mensagem para o RabbitMQ",
                 "parameters": [
@@ -94,12 +101,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
-	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Version:          "0.0.1",
+	Host:             "localhost:3000",
+	BasePath:         "/",
+	Schemes:          []string{"http", "https"},
+	Title:            "RabbitMQ Simple",
+	Description:      "Este é um projeto de exemplo que demonstra a implementação de um sistema de mensageria usando RabbitMQ e Go",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

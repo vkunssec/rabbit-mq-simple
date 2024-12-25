@@ -1,3 +1,4 @@
+basePath: /
 definitions:
   pkg_handlers.BadRequestError:
     description: Erro de requisição
@@ -21,14 +22,26 @@ definitions:
         example: message sent
         type: string
     type: object
+host: localhost:3000
 info:
-  contact: {}
+  contact:
+    name: API Support
+  description: Este é um projeto de exemplo que demonstra a implementação de um sistema
+    de mensageria usando RabbitMQ e Go
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: RabbitMQ Simple
+  version: 0.0.1
 paths:
   /send:
     post:
       consumes:
       - application/json
-      description: Envia uma mensagem para o RabbitMQ
+      description: Endpoint para enviar mensagens ao RabbitMQ. Requer uma mensagem
+        e uma routing key válida. A mensagem será publicada no exchange configurado
+        usando a routing key especificada.
       parameters:
       - description: Payload
         in: body
@@ -49,5 +62,8 @@ paths:
             $ref: '#/definitions/pkg_handlers.BadRequestError'
       summary: Envia uma mensagem para o RabbitMQ
       tags:
-      - send
+      - Send Message RabbitMQ
+schemes:
+- http
+- https
 swagger: "2.0"

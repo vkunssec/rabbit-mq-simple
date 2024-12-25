@@ -27,8 +27,8 @@ type BadRequestError struct {
 }
 
 // @Summary Envia uma mensagem para o RabbitMQ
-// @Description Envia uma mensagem para o RabbitMQ
-// @Tags send
+// @Description Endpoint para enviar mensagens ao RabbitMQ. Requer uma mensagem e uma routing key válida. A mensagem será publicada no exchange configurado usando a routing key especificada.
+// @Tags Send Message RabbitMQ
 // @Accept json
 // @Produce json
 // @Param payload body Payload true "Payload"

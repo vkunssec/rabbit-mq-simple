@@ -1,12 +1,28 @@
 {
+    "schemes": [
+        "http",
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Este é um projeto de exemplo que demonstra a implementação de um sistema de mensageria usando RabbitMQ e Go",
+        "title": "RabbitMQ Simple",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "0.0.1"
     },
+    "host": "localhost:3000",
+    "basePath": "/",
     "paths": {
         "/send": {
             "post": {
-                "description": "Envia uma mensagem para o RabbitMQ",
+                "description": "Endpoint para enviar mensagens ao RabbitMQ. Requer uma mensagem e uma routing key válida. A mensagem será publicada no exchange configurado usando a routing key especificada.",
                 "consumes": [
                     "application/json"
                 ],
@@ -14,7 +30,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "send"
+                    "Send Message RabbitMQ"
                 ],
                 "summary": "Envia uma mensagem para o RabbitMQ",
                 "parameters": [

@@ -21,7 +21,7 @@ import (
 // @License.name Apache 2.0
 // @License.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @Host localhost:3000
+// @Host 127.0.0.1:3000
 // @BasePath /
 // @Schemes http https
 func main() {

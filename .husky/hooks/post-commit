@@ -1,0 +1,126 @@
+#!/bin/sh
+set -e
+
+# Cores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Funções auxiliares
+log() {
+    echo -e "${GREEN}[Post-commit]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[Post-commit]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[Post-commit]${NC} $1"
+}
+
+is_docs_commit() {
+    [[ "$(git log -1 --pretty=%B)" == "docs: update docs" ]]
+}
+
+has_docs_changes() {
+    # Verifica se há alterações na pasta docs/ (incluindo arquivos não staged)
+    if git diff --quiet docs/ && [ -z "$(git ls-files --others --exclude-standard docs/)" ]; then
+        return 1
+    fi
+    return 0
+}
+
+validate_git_repo() {
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        error "Não está em um repositório git"
+        exit 1
+    fi
+}
+
+commit_changes() {
+    local msg="$1"
+    local files="$2"
+    
+    # Salva a lista de arquivos que estavam staged originalmente
+    local staged_files=$(git diff --name-only --cached -- $files)
+    
+    # Verifica se há arquivos para adicionar
+    if [ -z "$staged_files" ]; then
+        warn "Nenhuma alteração para commitar em: $files"
+        return 0
+    fi
+    
+    # Adiciona apenas os arquivos que estavam staged originalmente
+    if ! git add $staged_files; then
+        error "Falha ao adicionar arquivos: $staged_files"
+        return 1
+    fi
+    
+    # Adiciona mais detalhes ao erro do commit
+    if ! git commit -m "$msg" 2>/tmp/git_error; then
+        error "Falha ao criar commit: $msg"
+        error "Detalhes do erro: $(cat /tmp/git_error)"
+        return 1
+    fi
+    
+    return 0
+}
+
+# Função principal
+main() {
+    validate_git_repo
+
+    if [ -n "$SKIP_POST_COMMIT" ]; then
+        warn "Pulando execução recursiva"
+        exit 0
+    fi
+
+    log "Iniciando hook"
+
+    if is_docs_commit; then
+        warn "Pulando commit de documentação"
+        exit 0
+    fi
+
+    if ! has_docs_changes; then
+        log "Sem alterações na documentação"
+        exit 0
+    fi
+
+    # Preparação
+    ORIGINAL_COMMIT_MSG=$(git log -1 --pretty=%B)
+    log "Processando commit: $ORIGINAL_COMMIT_MSG"
+
+    # Execução principal com tratamento de erros
+    {
+        export SKIP_POST_COMMIT=1
+        
+        log "Resetando commits..."
+        git reset --soft HEAD^
+        git reset HEAD docs/
+        
+        log "Criando commit original..."
+        if ! commit_changes "$ORIGINAL_COMMIT_MSG" "."; then
+            error "Falha ao criar commit original"
+            exit 1
+        fi
+        
+        log "Criando commit de documentação..."
+        if ! commit_changes "docs: update docs" "docs/"; then
+            error "Falha ao criar commit de documentação"
+            exit 1
+        fi
+        
+        log "Commits criados com sucesso!"
+    } || {
+        error "Erro durante o processo de commit"
+        error "Executando git reset --hard HEAD^ para reverter alterações"
+        git reset --hard HEAD^
+        exit 1
+    }
+}
+
+# Executa o script
+main "$@"

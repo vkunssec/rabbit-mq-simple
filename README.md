@@ -11,7 +11,7 @@ Este é um projeto de exemplo que demonstra a implementação de um sistema de m
 - [Swagger](https://swagger.io/) - Documentação da API
 - [Scalar](https://github.com/scalar/scalar) - Interface moderna para documentação da API
 - [Air](https://github.com/cosmtrek/air) - Live Reload para desenvolvimento
-- [Husky](https://typicode.github.io/husky/) - Git Hooks
+- [Husky](https://github.com/vkunssec/husky/) - Git Hooks
 
 ## 📋 Pré-requisitos
 
@@ -137,12 +137,34 @@ O RabbitMQ está configurado com as seguintes definições:
 
 ## 🔒 Git Hooks
 
-O projeto utiliza Husky para gerenciar git hooks. Antes de cada commit, são executadas as seguintes verificações:
+O projeto utiliza Husky para gerenciar git hooks, implementando verificações automatizadas antes e após os commits.
 
-- `go mod tidy`
-- `go fmt ./...`
-- `go vet ./...`
-- `golangci-lint run ./...`
+### Pre-commit Hook
+Antes de cada commit, são executadas as seguintes verificações:
+
+- `go mod tidy`: Organiza as dependências do projeto
+- `go fmt ./...`: Formata o código Go
+- `go vet ./...`: Analisa problemas no código
+- `golangci-lint run ./...`: Executa o linter
+- `swag init`: Atualiza a documentação Swagger
+
+O hook inclui feedback visual colorido e tratamento de erros para cada etapa.
+
+### Post-commit Hook
+Após cada commit, o hook gerencia automaticamente a documentação:
+
+- Verifica alterações na pasta `docs/`
+- Separa commits de documentação do código principal
+- Cria um commit adicional "docs: update docs" quando necessário
+- Previne execução recursiva
+- Fornece feedback visual do processo
+- Implementa rollback automático em caso de falhas
+
+Ambos os hooks incluem:
+- Feedback visual com códigos de cores
+- Tratamento robusto de erros
+- Mensagens informativas sobre cada etapa
+- Validações de segurança
 
 ## 🐳 Containers Docker
 
@@ -167,7 +189,7 @@ O projeto inclui quatro containers principais:
 A documentação da API está disponível em dois formatos:
 
 ### Swagger UI
-- URL: `http://localhost:3000/swagger`
+- URL: `http://127.0.0.1:3000/swagger`
 - Fornece uma interface moderna e interativa para testar os endpoints
 - Documentação completa dos schemas e responses
 - Modo escuro habilitado por padrão
